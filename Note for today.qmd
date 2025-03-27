@@ -1,0 +1,112 @@
+---
+title: "Note on packaging"
+author: "Vincy Huang"
+format: html
+editor: visual
+---
+
+```{r}
+library(devtools)
+```
+
+```{r}
+session_info() 
+```
+
+-   Out of the session_info(), under `locale` information: we see alot of `UTF-8`, `U` in the beginning of these phrasing stands for 'universal' language by computer!
+
+-   Time zone infomration is also important if we're working with date time data.
+
+-   `Loaded via a name space` and `other attached packages` are important!
+
+```{r}
+create_package("git/is_leap") # under devtools
+create_package("~/git/is_leap") # alternatively we can also write as this
+# Then we should expect an error because of the underscore!
+
+```
+
+-   `create_package()` creates a new folder to pre-make a new file! (COOL!)
+
+-   I'm going to create a new package, and I want it to be within the git folder. The package is called leap
+
+    -   NOTE that in package in R, packages have to be [**Camel case, use dot (.)**]{.underline}, but there cannot be any underscores (no "\_"!).
+
+```{r}
+ create_package("~/git_repo/is.leap") # under devtools
+ getwd()
+```
+
+-   Version 9000 in the DESCRIPTION of the package folder is a convention that tells you about which version of `testthat` is being used.
+
+-   Author portion follows some argument syntatic rules.
+
+    -   When citng a package, the citation of your package gets drived from the `authors` section here!
+
+-   Description allows you to give a brief definition of what the package does!
+
+```{r}
+use_git()  
+```
+
+-   The below `use_git()` function allows you to turn the current local folder into a git repository.
+
+```{r}
+use_git()
+```
+
+ise_r("is_leap")
+
+```{r}
+is_leap <- function(num) {
+  if (num %% 4 == 0) {
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
+  }
+```
+
+-   Although T/F stands for `TRUE` and `FALSE` boolean values in R, these 2 standalone letters could be reassign, so it is better to stay with `TRUE` and `FALSE`\~
+
+-   For the current **Milestone 3**, our goal is to be able to Source some R function. HOWEVER, the goal of this course as a whole is to be able to load the functions through the `library()`!
+
+-   We want to make sure that our library is not being loaded up again and again, so [**restarting**]{.underline} the R session is crucial!
+
+-   Often in R, we see the following code a lot:
+
+    > -   `{r} rm(list = ls())`\# removes things from env., but not detaching all libraries!
+    >
+    > -   If you see this in a script, should begin to be suspicious about the reproducibility of the code!!
+
+```{r}
+devtools::load_all()
+```
+
+We want to use double colons `::` because we're planning to reload and restart the R session over and over. Using `::` takes away the messiness and time needed to load all those entire packages!!
+
+-   `load_all()`: For every file in the `R` folder, we load it!
+
+-   **For the MS4, this would be necessary!**
+
+```{r}
+is_leap(1000)
+```
+
+```{r}
+usethis::use_mit_license()
+```
+
+-   In R, it's always important to know where your functions are coming from (which package).
+
+-   When we run check, and if we see all the green check marks, that is a cue to commit everything that is going on! This gives basically a R package without all the documentation for this particular function.
+
+Another part of documentation that is really important is the @export line!
+
+-   This essentially say that you're loading up a package for them to have access.
+
+-   We want to make sure that this process works for someone else!!
+
+-   Not good to ask people to clone down the entire github repository (not very user friend eh!)
+
+    -   Rather, we want to aid our user as much as possible. To do this we want to create a R package which users can install.
